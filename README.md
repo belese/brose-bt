@@ -1,57 +1,49 @@
 # brose-bt
 Python module to access brose ebike hmi bluetooth API
 
-## usage
+## Requirements
+  bleak, protobuf
+  
+## Usage
 ```
 from brosebt import BleConnection, BroseEbike, brose
-```
-### Instancie a connection with address 
-```
-my_bike_connection = BleConnection("DB:6A:44:0C:7A:5C")
-await my_bike_connection.pair() #require only once
-```
-### Or find bike and pair connection automaticaly   
-```
-my_bike_connection = await BleConnection.auto()
-```    
 
-### Start the communication_listenning   
-```
-await my_bike_connection.start_listening()
-```    
-### Create the Ebike Object
-```
-mybike = BroseEbike(my_bike_connection)
-```
+# Instancie a connection with address 
+async def main()
+        my_bike_connection = BleConnection("DB:6A:44:0C:7A:5C")
+        await my_bike_connection.pair() #require only once
+        
+        #or find bike and pair connection automaticaly   
+        #my_bike_connection = await BleConnection.auto()
 
-### Calling Api
-```
-#Read static data
-await mybike.request_static_data()
-mybike.debug_static_data()
+        # Start the communication_listenning   
+        await my_bike_connection.start_listening()
 
-#Read live data
-await mybike.request_live_data()
-mybike.debug_live_data()    
+        # Create the Ebike Object
+        mybike = BroseEbike(my_bike_connection)
+        
+        # Calling Api
+        #Read static data
+        await mybike.request_static_data()
+        mybike.debug_static_data()
+        
+        #Read live data
+        await mybike.request_live_data()
+        mybike.debug_live_data()    
+        
+        #Call function
+        await mybike.reset_trip_distance()
+        await mybike.set_thrustfactor(brose.ECO,40)
+        await mybike.set_support_profile(brose.ECO)
+        await mybike.set_current_scaling(100)
+        await mybike.set_support_profile_scale(100)
 
-#Call function
-await mybike.reset_trip_distance()
-await mybike.set_thrustfactor(brose.ECO,40)
-await mybike.set_support_profile(brose.ECO)
-await mybike.set_current_scaling(100)
-await mybike.set_support_profile_scale(100)
-```
+        # Stop the communication_listenning   
+        await my_bike_connection.stop_listening()
 
-### Stop the communication_listenning   
-```
-await my_bike_connection.stop_listening()
-```
-
-### dont foregt to run the loop
-```
+# dont foregt to run the loop
 loop = asyncio.get_event_loop()
-...
-loop.run_until_complete(your_fn())
+loop.run_until_complete(main())
 ```
 
 
